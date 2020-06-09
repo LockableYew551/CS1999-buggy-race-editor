@@ -23,29 +23,62 @@ def home():
 @app.route('/new', methods = ['POST', 'GET'])
 def create_buggy():
   if request.method == 'GET':
-    return render_template("buggy-form.html")
+
+   con = sql.connect(DATABASE_FILE)
+   con.row_factory = sql.Row
+   cur = con.cursor()
+   cur.execute("SELECT * FROM buggies")
+   record = cur.fetchone(); 
+     
+   return render_template("buggy-form.html", buggy = record)
   elif request.method == 'POST':
     msg=""
+    qty_wheels = request.form['qty_wheels']
+    power_units= request.form['power_units']
+
+    total_cost= power_units
+    
+    if not qty_wheels.isdigit():
+       msg = f"This is not a number, please put a number: {qty_wheels}"
+       return render_template("buggy-form.html", msg = msg)
+      
+    if not power_units.isdigit():
+       msg = f"Power must be a number: {power_units}"
+       return render_template("buggy-form.html", msg = msg)
+
+    if int(qty_wheels)%2 !=0:
+       violation="Must be an even number ! *Angry baguette*"
+    else:
+       violation= ""
+
+   
+    msg= f"power_units={power_units}"
+    msg = f"qty_wheels={qty_wheels}"
+    
     try:
-      qty_wheels = request.form['qty_wheels']
-      msg = f"qty_wheels={qty_wheels}" 
+      
+      flag_color = request.form['flag_color']
+      power_type = request.form['power_type']
+      
+      
       with sql.connect(DATABASE_FILE) as con:
         cur = con.cursor()
-        cur.execute("UPDATE buggies set qty_wheels=? WHERE id=?", (qty_wheels, DEFAULT_BUGGY_ID))
+        cur.execute("UPDATE buggies set qty_wheels=?, flag_color=?,power_type=?, power_units=? WHERE id=?", (qty_wheels, flag_color, power_type, power_units, DEFAULT_BUGGY_ID))
         con.commit()
-        msg = "Record successfully saved"
+        msg = "Record successfully saved"    
     except:
       con.rollback()
       msg = "error in update operation"
     finally:
       con.close()
-      return render_template("updated.html", msg = msg)
-
+      return render_template("updated.html", msg = msg, violation = violation)
 #------------------------------------------------------------
 # a page for displaying the buggy
 #------------------------------------------------------------
 @app.route('/buggy')
 def show_buggies():
+
+
   con = sql.connect(DATABASE_FILE)
   con.row_factory = sql.Row
   cur = con.cursor()

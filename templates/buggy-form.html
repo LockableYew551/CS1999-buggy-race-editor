@@ -5,11 +5,43 @@
 {% block content %}
 
   <h1>Make buggy</h1>
+    <p>
+    {{ msg }}
+  </p>
   <form action="/new" method="post">
-    <label for="qty_wheels">Number of wheels:</label>
-    <input type="text" name="qty_wheels" />
-    <input type="submit" class="button">
+	<p>
+		<label for="qty_wheels">Number of wheels:</label>
+		<input type="text" name="qty_wheels" value= "{{ buggy['qty_wheels'] }}"/>
+	</p>
+	<p>
+		<label for= "flag_color">Colour of the flag:</label>
+		<input type="text" name="flag_color" value= "{{ buggy['flag_color']}}"/>
+	</p>
+	<p>
+		<label for= "power_type">Choose your power:</label>  
+		<select name="power_type">
+		 <option if selected endif>petrol</option>
+		 <option if selected endif>fusion</option>
+		 <option if selected endif>steam</option>
+		 <option if selected endif>bio</option>
+		 <option if selected endif>electric</option>
+		 <option if selected endif>rocket</option>
+		 <option if selected endif>hamster</option>
+		 <option if selected endif>thermo</option>
+		 <option if selected endif>solar</option>
+		 <option if selected endif>wind</option>
+		</select>
+		
+	</p>
+	<p>
+		<label for= "power_units">Power of the car:</label>
+		<input type="text" name="power_units" value= "{{ buggy['power_units'] }}"/>
+	</p>
+
+	<br/>
+    <input type="submit" class="button" >
   </form>
+
   <p>
     <a href="/" class="button">home</a>
    </p>
