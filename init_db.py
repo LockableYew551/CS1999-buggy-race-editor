@@ -32,7 +32,7 @@ con.execute("""
     flag_pattern          VARCHAR(20),
     power_units           INTEGER DEFAULT 1,
     power_type            PETROL,
-    total_cost            INTEGER DEFAULT 1
+    total_cost            INTEGER DEFAULT 0
   )
 
 """)

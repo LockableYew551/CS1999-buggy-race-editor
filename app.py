@@ -51,7 +51,8 @@ def create_buggy():
     else:
        violation= ""
 
-   
+    #total_cost = "Here the total cost of the buggy", power_units
+    cost = 0
     msg= f"power_units={power_units}"
     msg = f"qty_wheels={qty_wheels}"
     
@@ -59,11 +60,11 @@ def create_buggy():
       
       flag_color = request.form['flag_color']
       power_type = request.form['power_type']
-      
+      cost = int(request.form['power_units'])
       
       with sql.connect(DATABASE_FILE) as con:
         cur = con.cursor()
-        cur.execute("UPDATE buggies set qty_wheels=?, flag_color=?,power_type=?, power_units=? WHERE id=?", (qty_wheels, flag_color, power_type, power_units, DEFAULT_BUGGY_ID))
+        cur.execute("UPDATE buggies set qty_wheels=?, flag_color=?,power_type=?, power_units=?, total_cost=? WHERE id=?", (qty_wheels, flag_color, power_type, power_units, total_cost, DEFAULT_BUGGY_ID))
         con.commit()
         msg = "Record successfully saved"    
     except:
@@ -71,14 +72,14 @@ def create_buggy():
       msg = "error in update operation"
     finally:
       con.close()
-      return render_template("updated.html", msg = msg, violation = violation)
+      return render_template("updated.html", msg = msg, violation = violation, total_cost = total_cost)
 #------------------------------------------------------------
 # a page for displaying the buggy
 #------------------------------------------------------------
 @app.route('/buggy')
 def show_buggies():
 
-
+  
   con = sql.connect(DATABASE_FILE)
   con.row_factory = sql.Row
   cur = con.cursor()
